@@ -18,6 +18,7 @@ library
   exposed-modules:     Hex
                      , Lib
                      , Base64
+                     , Xor
   build-depends:       base >= 4.7 && < 5
                      , containers
                      , bytestring
