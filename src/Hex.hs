@@ -15,7 +15,7 @@ newtype HexString = HexString String deriving (Show, Eq)
 
 charWeights :: M.Map Char Word8
 charWeights =
-  let chars = ['0'..'9'] ++ ['A'..'F']
+  let chars = ['0'..'9'] ++ ['a'..'f']
       pairs = zip chars [0..16]
   in M.fromList pairs
 

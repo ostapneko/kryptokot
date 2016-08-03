@@ -1,12 +1,14 @@
 module Common (
-  frequencies
+  frequencyScore
   ) where
 
-import qualified Data.Map.Strict as Map
+import qualified Data.Map.Strict as M
+import qualified Data.ByteString as BS
+import qualified Data.ByteString.Char8 as C8
 
-frequencies :: Map.Map Char Float
+frequencies :: M.Map Char Float
 frequencies =
-  Map.fromList [
+  M.fromList [
     ('a', 8.167),
     ('b', 1.492),
     ('c', 2.782),
@@ -37,3 +39,8 @@ frequencies =
     (',', 2),
     ('.', 2)
   ]
+
+frequencyScore :: BS.ByteString -> Float
+frequencyScore bs =
+  let chars = C8.unpack bs
+  in sum $ map (\ c -> M.findWithDefault 0 c frequencies) chars

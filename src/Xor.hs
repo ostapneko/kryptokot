@@ -1,6 +1,5 @@
 module Xor
-  ( xorSingle
-  , findBestKey
+  ( decryptSingle
   ) where
 
 import Data.Word
@@ -9,23 +8,25 @@ import qualified Data.ByteString.Char8 as C8
 import Data.Bits
 import Data.List
 import Common
-import qualified Data.Map.Strict as M
-
 
 xorSingle :: Word8 -> BS.ByteString -> BS.ByteString
 xorSingle key bs =
   let words = BS.unpack bs
   in BS.pack $ map (key `xor`) words
 
-frequencyScore :: Word8 -> BS.ByteString -> Float
-frequencyScore key bs =
+keyScore :: Word8 -> BS.ByteString -> Float
+keyScore key bs =
   let decoded = xorSingle key bs
-      chars = C8.unpack decoded
-  in sum $ map (\ c -> M.findWithDefault 0 c frequencies) chars
+  in frequencyScore decoded
 
 findBestKey :: BS.ByteString -> Word8
 findBestKey bs =
   let candidates = [minBound..maxBound]
-      scores = map (\ c -> (frequencyScore c bs, c)) candidates
+      scores = map (\ c -> (keyScore c bs, c)) candidates
       (_, key) = maximum scores
   in key
+
+decryptSingle :: BS.ByteString -> BS.ByteString
+decryptSingle bs =
+  let key = findBestKey bs
+  in xorSingle key bs
